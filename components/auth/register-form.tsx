@@ -1,6 +1,6 @@
 "use client"
 import * as z from "zod";
-import { CardWrapper } from "@/app/auth/card-wrapper"
+import { CardWrapper } from "@/components/auth/card-wrapper"
 import {useForm} from 'react-hook-form';
 import {zodResolver} from "@hookform/resolvers/zod";
 import {RegisterSchema} from "@/schemas"
@@ -49,7 +49,7 @@ export const RegisterForm = () => {
     }
     return (
         <CardWrapper
-            headerLabel="Create an account Cunt"
+            headerLabel="Create Your Account "
             backButtonLabel="Already have an account?"
             backButtonHref="/auth/login"
             showSocial

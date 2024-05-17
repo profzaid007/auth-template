@@ -5,6 +5,10 @@ import { signIn } from "@/auth";
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
 import { AuthError } from 'next-auth';
 
+import { generateVerificationToken } from '@/lib/tokens';
+import { getUserByEmail } from '@/data/user';
+import { RiExchangeBoxFill } from 'react-icons/ri';
+import { sendVerificationEmail } from '@/lib/mail';
 
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
@@ -15,6 +19,35 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     }
 
     const { email, password } = validatedFields.data;
+
+    const existingUser = await getUserByEmail(email);
+
+
+
+    if(!existingUser){
+        return {error: "Email Does not Exist"}
+    }
+
+
+    
+    if(!existingUser.emailVerified && existingUser.email){
+        const verificationToken = await generateVerificationToken(
+            existingUser.email,
+        );
+        await sendVerificationEmail(
+            verificationToken.email,
+            verificationToken.token,
+        )
+
+        return {success: "Confirmation Email Sent!"}
+    }
+
+    
+   
+
+   
+   
+   
 
     try {
         await signIn("credentials", {
